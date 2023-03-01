@@ -8,6 +8,9 @@ namespace UrlsManager.DataManagers
 {
     public class UrlManager : IDBManager
     {
-
+        public static void Save(string filePath, string userInput)
+        {
+            File.AppendAllLines(filePath, new string[] { userInput });
+        }
     }
 }

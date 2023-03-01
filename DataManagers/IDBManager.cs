@@ -2,7 +2,7 @@
 {
     public interface IDBManager
     {
-        public void Save()
+        public static void Save()
         {
 
         }

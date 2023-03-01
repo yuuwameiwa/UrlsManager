@@ -1,0 +1,2 @@
+SavedUrls @ D:\projects\UrlsManager\Files\SavedUrls.txt
+Audios @ D:\downloads

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using UrlsManager.Managers;
+﻿using UrlsManager.Managers;
 
 namespace UrlsManager.Menus
 {
@@ -32,9 +31,11 @@ namespace UrlsManager.Menus
             ChildrenArray[userInput].Action();
         }
 
-        public void GoBack()
+        public void GoBack(Menu parent)
         {
             Console.Clear();
+
+            Parent = parent;
             Parent.Action();
         }
     }
