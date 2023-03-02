@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace UrlsManager.DataManagers
 {
@@ -11,6 +7,29 @@ namespace UrlsManager.DataManagers
         public static void Save(string filePath, string userInput)
         {
             File.AppendAllLines(filePath, new string[] { userInput });
+        }
+
+        public static string[] Read(string filePath)
+        {
+            string[] urls = File.ReadAllLines(filePath);
+
+            return urls;
+        }
+
+        public static void OpenUrl(string userUrl)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                UseShellExecute = true,
+                FileName = userUrl
+            }).Dispose();
+        }
+
+        public static string SearchUrl(string[] urls)
+        {
+            Console.Write("Enter URL:");
+
+            return "a";
         }
     }
 }

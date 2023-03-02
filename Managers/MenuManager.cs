@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using UrlsManager.Menus;
 
 namespace UrlsManager.Managers
@@ -11,9 +12,10 @@ namespace UrlsManager.Managers
     /// </summary>
     public class MenuManager
     {
-        public int HandleMenu(string[] outputs )
+        public int HandleMenu( string[] outputs )
         {
             int currentSelection = 0;
+            string searchQuery = "";
 
             // Распечатать строки
             PrintOutputs(outputs, currentSelection);
@@ -28,27 +30,47 @@ namespace UrlsManager.Managers
                 if (key.Key == ConsoleKey.UpArrow && currentSelection > 0) 
                 {
                     currentSelection--;
-                    PrintOutputs(outputs, currentSelection);
+                    // PrintOutputs(outputs, currentSelection, searchQuery);
                 }
                 else if (key.Key == ConsoleKey.DownArrow && currentSelection < outputs.Length - 1)
                 {
                     currentSelection++;
-                    PrintOutputs(outputs, currentSelection);
+                    // PrintOutputs(outputs, currentSelection, searchQuery);
                 }
                 // Ответ в случае нажатия Enter
                 else if (key.Key == ConsoleKey.Enter) 
                 {
                     optionSelected = true;
                 }
+                // Поиск
+                else if(char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar) || key.Key == ConsoleKey.Backspace)
+                {
+                    if (char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar))
+                    {
+                        searchQuery += key.KeyChar;
+                    }
+                    else if (key.Key == ConsoleKey.Backspace)
+                    {
+                        if (searchQuery.Length > 0)
+                        {
+                            searchQuery = searchQuery.Remove(searchQuery.Length - 1);
+                        }
+                    }                 
+                }
+
+                string[] searchOutputs = Array.FindAll(outputs, url => url.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0);
+                PrintOutputs(searchOutputs, currentSelection, searchQuery);
             }
 
             // Вернуть индекс выбранного output
             return currentSelection;
         }
 
-        public static void PrintOutputs(string[] outputs, int currentSelection)
+        public static void PrintOutputs(string[] outputs, int currentSelection, string searchQuery = "")
         {
             Console.Clear();
+
+            Console.WriteLine($"Search for \"{searchQuery}\"\n");
 
             // Распечатать строки. Выбранная строка подсвечивается красным
             foreach ((string output, int index) in outputs.Select((value, index) => (value, index)))
@@ -64,7 +86,7 @@ namespace UrlsManager.Managers
         }
 
         // Получить ввод пользователя
-        public string AcceptInput()
+        public string AcceptUrlInput()
         {
             Console.Clear();
             Console.Write("Enter URL:");
@@ -74,7 +96,7 @@ namespace UrlsManager.Managers
         }
 
         // Проверка строки на наличие https:// или http://
-        public string StandardizeInput(string urlInput)
+        public string StandardizeUrlInput(string urlInput)
         {
             if (!urlInput.StartsWith("https://") && !urlInput.StartsWith("http://"))
                 urlInput = $"https://{urlInput}";
@@ -82,11 +104,6 @@ namespace UrlsManager.Managers
             urlInput = urlInput.ToLower();
 
             return urlInput;
-        }
-
-        public string Search(string input)
-        {
-            return "TODO Search";
         }
     }
 }

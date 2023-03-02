@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UrlsManager.Managers;
-
-namespace UrlsManager.Menus
+﻿namespace UrlsManager.Menus
 {
-    public class YoutubeMenu : Menu
+    public class YoutubeSearchMenu : Menu
     {
-        public YoutubeMenu(Menu parent)
+        public YoutubeSearchMenu(Menu parent)
         {
-            this.Description = "Youtube Menu";
+            Description = "Youtube Search Menu";
         }
 
         public override void Action()

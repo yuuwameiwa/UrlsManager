@@ -16,14 +16,13 @@ namespace UrlsManager.Menus
         {
             MenuManager menuManager = new MenuManager();
 
-            string urlInput = menuManager.AcceptInput();
-            urlInput = menuManager.StandardizeInput(urlInput);
+            string urlInput = menuManager.AcceptUrlInput();
+            urlInput = menuManager.StandardizeUrlInput(urlInput);
 
             string savePath = ApplicationManager.GetPath("SavedUrls");
 
             UrlManager.Save(savePath, urlInput);
 
-            Console.WriteLine("Press any Key to Continue");
             Console.ReadKey();
             GoBack(Parent);
         }

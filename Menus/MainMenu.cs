@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace UrlsManager.Menus
+﻿namespace UrlsManager.Menus
 {
     public class MainMenu : Menu
     {
@@ -12,7 +10,7 @@ namespace UrlsManager.Menus
             {
                 new AddUrlMenu(this),
                 new SearchUrlMenu(this),
-                new YoutubeMenu(this)
+                new YoutubeSearchMenu(this)
             };
         }
     }
