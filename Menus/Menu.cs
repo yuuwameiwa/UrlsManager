@@ -5,6 +5,7 @@ namespace UrlsManager.Menus
     public abstract class Menu
     {
         public string Description { get; private protected set; }
+        public int OptionChoice { get; private protected set; }
 
         protected Menu[] ChildrenArray;
 
@@ -19,16 +20,24 @@ namespace UrlsManager.Menus
 
         public virtual void Action()
         {
-            MenuManager menuManager = new MenuManager();
-
             // Записать в массив названия меню
             string[] names = ChildrenArray.Select(child  => child.Description).ToArray();
 
-            // Распечатать их и получить выбор пользователя
-            int userInput = menuManager.HandleMenu(names);
+            MenuManager menuManager = new MenuManager(names);
+
+            while (menuManager.OptionSelected == false) 
+            {
+                // Распечатать названия меню
+                menuManager.PrintOutputs();
+
+                ConsoleKey key = Console.ReadKey(true).Key;
+
+                // Получить выбор меню от пользователя
+                OptionChoice = menuManager.HandleInput(key);
+            }
 
             // Вызвать Action() у выбранной опции
-            ChildrenArray[userInput].Action();
+            ChildrenArray[OptionChoice].Action();
         }
 
         public void GoBack(Menu parent)

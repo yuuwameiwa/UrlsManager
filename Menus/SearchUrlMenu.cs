@@ -8,26 +8,39 @@ namespace UrlsManager.Menus
         public SearchUrlMenu(Menu parent)
         {
             Description = "Search Url";
+
+            Parent = parent;
+
+            OptionChoice = 0;
         }
 
         public override void Action()
         {
-            MenuManager menuManager = new MenuManager();
-
             // Получить путь файла для сохранения URL
             string readPath = ApplicationManager.GetPath("SavedUrls");
 
             // Получить массив URL по полученному пути
             string[] urls = UrlManager.Read(readPath);
 
-            
-            int userInput = menuManager.HandleMenu(urls);
+            MenuManager menuManager = new MenuManager(urls);
 
             // Получить выбранный пользователем URL 
-            string userUrl = urls.GetValue(userInput).ToString();
+            while (menuManager.OptionSelected == false)
+            {
+                // Распечатать названия меню
+                menuManager.PrintOutputs();
+
+                ConsoleKey key = Console.ReadKey(true).Key;
+
+                // Получить выбор меню от пользователя
+                OptionChoice = menuManager.HandleInput(key);
+            }
+
+            // Получить строку выбранной
+            string searchedUrl = urls.GetValue(OptionChoice).ToString();
 
             // Открыть URL
-            UrlManager.OpenUrl(userUrl);
+            UrlManager.OpenUrl(searchedUrl);
         }
     }
 }

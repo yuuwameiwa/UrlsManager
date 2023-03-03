@@ -25,11 +25,25 @@ namespace UrlsManager.DataManagers
             }).Dispose();
         }
 
-        public static string SearchUrl(string[] urls)
+        // Получить ввод пользователя
+        public static string AcceptUrlInput()
         {
+            Console.Clear();
             Console.Write("Enter URL:");
+            string? inputString = Console.ReadLine();
 
-            return "a";
+            return inputString == null ? null : inputString;
+        }
+
+        // Проверка строки на наличие https:// или http://
+        public static string StandardizeUrlInput(string urlInput)
+        {
+            if (!urlInput.StartsWith("https://") && !urlInput.StartsWith("http://"))
+                urlInput = $"https://{urlInput}";
+
+            urlInput = urlInput.ToLower();
+
+            return urlInput;
         }
     }
 }

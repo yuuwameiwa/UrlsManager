@@ -12,4 +12,8 @@
     <Folder Include="Files\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="YoutubeExplode" Version="6.2.8" />
+  </ItemGroup>
+
 </Project>

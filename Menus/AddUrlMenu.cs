@@ -14,10 +14,9 @@ namespace UrlsManager.Menus
 
         public override void Action()
         {
-            MenuManager menuManager = new MenuManager();
+            string urlInput = UrlManager.AcceptUrlInput();
 
-            string urlInput = menuManager.AcceptUrlInput();
-            urlInput = menuManager.StandardizeUrlInput(urlInput);
+            urlInput = UrlManager.StandardizeUrlInput(urlInput);
 
             string savePath = ApplicationManager.GetPath("SavedUrls");
 

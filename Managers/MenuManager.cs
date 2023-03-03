@@ -1,8 +1,4 @@
-﻿using System;
-using System.Buffers;
-using UrlsManager.Menus;
-
-namespace UrlsManager.Managers
+﻿namespace UrlsManager.Managers
 {
     /// <summary>
     /// Класс отвечает за:
@@ -12,98 +8,56 @@ namespace UrlsManager.Managers
     /// </summary>
     public class MenuManager
     {
-        public int HandleMenu( string[] outputs )
+        private string[] Outputs;
+        private int SelectedIdx;
+        public bool OptionSelected { get; protected set; }
+
+        public MenuManager(string[] outputs)
         {
-            int currentSelection = 0;
-            string searchQuery = "";
-
-            // Распечатать строки
-            PrintOutputs(outputs, currentSelection);
-
-            // Получать ввод пользователя
-            bool optionSelected = false;
-            while (!optionSelected) 
-            {
-                ConsoleKeyInfo key = Console.ReadKey();
-
-                // Отвечать за нажатия стрелок пользователя
-                if (key.Key == ConsoleKey.UpArrow && currentSelection > 0) 
-                {
-                    currentSelection--;
-                    // PrintOutputs(outputs, currentSelection, searchQuery);
-                }
-                else if (key.Key == ConsoleKey.DownArrow && currentSelection < outputs.Length - 1)
-                {
-                    currentSelection++;
-                    // PrintOutputs(outputs, currentSelection, searchQuery);
-                }
-                // Ответ в случае нажатия Enter
-                else if (key.Key == ConsoleKey.Enter) 
-                {
-                    optionSelected = true;
-                }
-                // Поиск
-                else if(char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar) || key.Key == ConsoleKey.Backspace)
-                {
-                    if (char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar))
-                    {
-                        searchQuery += key.KeyChar;
-                    }
-                    else if (key.Key == ConsoleKey.Backspace)
-                    {
-                        if (searchQuery.Length > 0)
-                        {
-                            searchQuery = searchQuery.Remove(searchQuery.Length - 1);
-                        }
-                    }                 
-                }
-
-                string[] searchOutputs = Array.FindAll(outputs, url => url.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0);
-                PrintOutputs(searchOutputs, currentSelection, searchQuery);
-            }
-
-            // Вернуть индекс выбранного output
-            return currentSelection;
+            Outputs = outputs;
+            SelectedIdx = 0;
+            OptionSelected = false;
         }
 
-        public static void PrintOutputs(string[] outputs, int currentSelection, string searchQuery = "")
+        public void PrintOutputs()
         {
-            Console.Clear();
+            Console.CursorVisible = false;
+            // Распечатать строки.
+            for (int i = 0; i < Console.WindowHeight; i++) 
+                for (int j = 0; j < Console.WindowWidth; j++)
+                    Console.Write(' ');
+            Console.CursorVisible = true;
 
-            Console.WriteLine($"Search for \"{searchQuery}\"\n");
 
-            // Распечатать строки. Выбранная строка подсвечивается красным
-            foreach ((string output, int index) in outputs.Select((value, index) => (value, index)))
+            foreach ((string output, int index) in Outputs.Select((value, index) => (value, index)))
             {
-                // Покрас выбора в красный
-                if (index == currentSelection)      
-                    Console.ForegroundColor = ConsoleColor.Red;
+                Console.SetCursorPosition(0, index);
 
-                Console.WriteLine($"{index + 1}. {output}\r");
-
-                Console.ResetColor();
+                if (index == SelectedIdx)
+                    Console.WriteLine("> " +  output.PadRight(50));
+                else
+                    Console.WriteLine(" " + output.PadRight(50));
             }
         }
 
-        // Получить ввод пользователя
-        public string AcceptUrlInput()
+        public int HandleInput(ConsoleKey key)
         {
-            Console.Clear();
-            Console.Write("Enter URL:");
-            string? inputString = Console.ReadLine();
+            switch (key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (SelectedIdx > 0)
+                        SelectedIdx--;
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (SelectedIdx < Outputs.Length - 1)
+                        SelectedIdx++;
+                    break;
+                case ConsoleKey.Enter:
+                    OptionSelected = true;
+                    return SelectedIdx;
+            }
 
-            return inputString == null ? null : inputString;
-        }
-
-        // Проверка строки на наличие https:// или http://
-        public string StandardizeUrlInput(string urlInput)
-        {
-            if (!urlInput.StartsWith("https://") && !urlInput.StartsWith("http://"))
-                urlInput = $"https://{urlInput}";
-
-            urlInput = urlInput.ToLower();
-
-            return urlInput;
+            return SelectedIdx;
         }
     }
 }
