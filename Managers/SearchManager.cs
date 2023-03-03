@@ -2,15 +2,31 @@
 {
     public class SearchManager
     {
-        public static string SearchQuery { get; private set; }
+        private static bool IsSearchSubmitted { get; set; } = false;
+        private static string SearchQuery { get; set; }
 
-        public static string Search(ConsoleKey key)
+        public static string Search()
         {
-            Console.WriteLine($"S: {SearchQuery}");
-            if ((key >= ConsoleKey.A && key <= ConsoleKey.Z) ||
-                (key >= ConsoleKey.Oem1 && key <= ConsoleKey.OemPeriod))
+            while (IsSearchSubmitted == false)
             {
-                SearchQuery += key;
+                Console.Clear();
+
+                Console.Write($"Поиск: {SearchQuery}");
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                if (char.IsLetterOrDigit(keyInfo.KeyChar) || char.IsPunctuation(keyInfo.KeyChar))
+                {
+                    SearchQuery += keyInfo.KeyChar;
+                }
+                else if (keyInfo.Key == ConsoleKey.Backspace && SearchQuery.Length > 0)
+                {
+                    SearchQuery = SearchQuery.Remove(SearchQuery.Length - 1);
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    IsSearchSubmitted = true;
+                }
             }
 
             return SearchQuery;

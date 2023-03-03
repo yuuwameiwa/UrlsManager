@@ -9,9 +9,10 @@
     public class MenuManager
     {
         private string[] Outputs;
+        
         private int SelectedIdx;
         public bool OptionSelected { get; protected set; }
-
+        
         public MenuManager(string[] outputs)
         {
             Outputs = outputs;
@@ -19,25 +20,31 @@
             OptionSelected = false;
         }
 
-        public void PrintOutputs()
+        public void PrintOutputs(string searchQuery)
         {
             Console.CursorVisible = false;
-            // Распечатать строки.
-            for (int i = 0; i < Console.WindowHeight; i++) 
+            // Очистить меню.
+            for (int i = 0; i < Console.WindowHeight; i++)
                 for (int j = 0; j < Console.WindowWidth; j++)
                     Console.Write(' ');
             Console.CursorVisible = true;
 
+            string[] filteredOutputs = Outputs.Where(output => output.Contains(searchQuery)).ToArray();
 
-            foreach ((string output, int index) in Outputs.Select((value, index) => (value, index)))
+            foreach ((string output, int index) in filteredOutputs.Select((value, index) => (value, index)))
             {
                 Console.SetCursorPosition(0, index);
 
                 if (index == SelectedIdx)
-                    Console.WriteLine("> " +  output.PadRight(50));
+                    Console.WriteLine("> " + output.PadRight(50));
                 else
                     Console.WriteLine(" " + output.PadRight(50));
             }
+        }
+
+        public void PrintOutputs()
+        {
+            PrintOutputs("");
         }
 
         public int HandleInput(ConsoleKey key)

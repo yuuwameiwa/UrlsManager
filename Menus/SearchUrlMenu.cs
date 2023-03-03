@@ -24,11 +24,14 @@ namespace UrlsManager.Menus
 
             MenuManager menuManager = new MenuManager(urls);
 
+            // Введите поиск
+            string searchQuery = SearchManager.Search();
+
             // Получить выбранный пользователем URL 
             while (menuManager.OptionSelected == false)
             {
                 // Распечатать названия меню
-                menuManager.PrintOutputs();
+                menuManager.PrintOutputs(searchQuery);
 
                 ConsoleKey key = Console.ReadKey(true).Key;
 
@@ -41,6 +44,11 @@ namespace UrlsManager.Menus
 
             // Открыть URL
             UrlManager.OpenUrl(searchedUrl);
+
+            // Вернуться назад
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+            Parent.Action();
         }
     }
 }

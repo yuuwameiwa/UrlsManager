@@ -1,4 +1,6 @@
-﻿using YoutubeExplode;
+﻿using UrlsManager.DataManagers;
+using UrlsManager.Managers;
+using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 
 namespace UrlsManager.Menus
@@ -10,23 +12,30 @@ namespace UrlsManager.Menus
             Description = "Youtube Search Menu";
         }
 
-        public override void Action()
+        public override async void Action()
         {
-            getVideo();
-        }
+            // Принять ввод URL пользователя 
+            string urlInput = UrlManager.AcceptUrlInput();
 
-        public static async Task getVideo()
-        {
+            // IsYoutubeUrl проверяет валидность введеного URL
+            if (UrlManager.IsYoutubeUrl(urlInput))
+            {
+                Console.WriteLine("Downloading, please wait...");
 
-            var youtube = new YoutubeClient();
+                // Получить путь куда скачивать аудио
+                string savePath = ApplicationManager.GetPath("Audios");
 
-            var videoUrl = "https://www.youtube.com/watch?v=hj0TG-bwUYk";
+                // Скачать аудио
+                YoutubeAudioManager.DownloadVideo(urlInput, savePath).Wait();
+            }
+            else
+            {
+                throw new ArgumentException("Not Youtube URL");
+            }
 
-            var video = await youtube.Videos.GetAsync(videoUrl);
-
-            var title = video.Title;
-
-            Console.WriteLine(title);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+            Parent.Action();
         }
     }
 }

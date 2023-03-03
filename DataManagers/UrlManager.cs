@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Net;
+using System.Reflection.Metadata.Ecma335;
 
 namespace UrlsManager.DataManagers
 {
@@ -30,6 +32,7 @@ namespace UrlsManager.DataManagers
         {
             Console.Clear();
             Console.Write("Enter URL:");
+
             string? inputString = Console.ReadLine();
 
             return inputString == null ? null : inputString;
@@ -41,9 +44,24 @@ namespace UrlsManager.DataManagers
             if (!urlInput.StartsWith("https://") && !urlInput.StartsWith("http://"))
                 urlInput = $"https://{urlInput}";
 
-            urlInput = urlInput.ToLower();
+            if (Uri.IsWellFormedUriString(urlInput, UriKind.Absolute))
+                return urlInput;
+            else
+                throw new ArgumentException("Invalid Url");
+        }
 
-            return urlInput;
+        public static bool IsYoutubeUrl(string youtubeUrlInput)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(youtubeUrlInput);
+
+            request.Method = "HEAD";
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) 
+            {
+                bool isYoutubeUrl = response.ResponseUri.ToString().Contains("youtube.com") ? true : false;
+
+                return isYoutubeUrl;
+            }
         }
     }
 }
