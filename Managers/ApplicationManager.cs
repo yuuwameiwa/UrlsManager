@@ -4,6 +4,7 @@ namespace UrlsManager.Managers
 {
     public class ApplicationManager
     {
+        // Получить настройки
         public static string GetPath(string option)
         {
             string programPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);

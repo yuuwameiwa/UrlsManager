@@ -5,6 +5,10 @@
         private static bool IsSearchSubmitted { get; set; } = false;
         private static string SearchQuery { get; set; }
 
+        /// <summary>
+        /// Метод осуществляет поиск
+        /// </summary>
+        /// <returns></returns>
         public static string Search()
         {
             while (IsSearchSubmitted == false)

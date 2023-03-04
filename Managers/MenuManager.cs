@@ -20,6 +20,7 @@
             OptionSelected = false;
         }
 
+        // Вывод на экрана Outputs
         public void PrintOutputs(string searchQuery)
         {
             Console.CursorVisible = false;
@@ -29,8 +30,10 @@
                     Console.Write(' ');
             Console.CursorVisible = true;
 
+            // Вывод на экран Outputs по поиску
             string[] filteredOutputs = Outputs.Where(output => output.Contains(searchQuery)).ToArray();
 
+            // Вывод на экран Output со стрелочкой
             foreach ((string output, int index) in filteredOutputs.Select((value, index) => (value, index)))
             {
                 Console.SetCursorPosition(0, index);
@@ -47,6 +50,7 @@
             PrintOutputs("");
         }
 
+        // Принять ввод от пользователя
         public int HandleInput(ConsoleKey key)
         {
             switch (key)
